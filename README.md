@@ -1,2 +1,2 @@
 # kinopoisk-parser-dle
-Парсер КиноПоиска для DLE
+Бесплатный парсер КиноПоиска для CMS DataLife Engine (DLE). Парсинг осуществляется с помощью сервиса https://kinopoiskapiunofficial.tech/
