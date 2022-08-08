@@ -1,5 +1,13 @@
 <?php
 
+/*
+=====================================================
+ Copyright (c) 2022 DLEPremium
+=====================================================
+ This code is protected by copyright
+=====================================================
+*/
+
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $title = isset($_GET['title']) ? $_GET['title'] : null;
 $kp_id = isset($_GET['kp_id']) ? $_GET['kp_id'] : null;
