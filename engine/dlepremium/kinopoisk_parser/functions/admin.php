@@ -1,4 +1,12 @@
 <?php
+
+/*
+=====================================================
+ Copyright (c) 2022 DLEPremium
+=====================================================
+ This code is protected by copyright
+=====================================================
+*/
  
 if (!defined('DATALIFEENGINE') || !defined('LOGGED_IN')) {
 	die('Hacking attempt!');
