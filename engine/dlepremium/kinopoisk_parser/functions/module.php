@@ -1,5 +1,13 @@
 <?php
 
+/*
+=====================================================
+ Copyright (c) 2022 DLEPremium
+=====================================================
+ This code is protected by copyright
+=====================================================
+*/
+
 if (!function_exists('api_request')) {
     function api_request($url, $x_api_key) {
         
