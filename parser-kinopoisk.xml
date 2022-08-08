@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dleplugin>
+	<name>Парсер КиноПоиск</name>
+	<description></description>
+	<icon></icon>
+	<version>1.0</version>
+	<dleversion></dleversion>
+	<versioncompare>greater</versioncompare>
+	<upgradeurl></upgradeurl>
+	<filedelete>0</filedelete>
+	<needplugin></needplugin>
+	<mnotice>0</mnotice>
+	<mysqlinstall><![CDATA[]]></mysqlinstall>
+	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
+	<mysqlenable><![CDATA[INSERT IGNORE INTO `{prefix}_admin_sections` (`name`, `title`, `descr`, `icon`, `allow_groups`) VALUES ('kinopoisk_parser', 'Парсер КиноПоиск', 'Настройки парсера КиноПоиск', '', '1');]]></mysqlenable>
+	<mysqldisable><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE `name` = 'kinopoisk_parser';]]></mysqldisable>
+	<mysqldelete><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE `name` = 'kinopoisk_parser';]]></mysqldelete>
+	<phpinstall><![CDATA[]]></phpinstall>
+	<phpupgrade><![CDATA[]]></phpupgrade>
+	<phpenable><![CDATA[]]></phpenable>
+	<phpdisable><![CDATA[]]></phpdisable>
+	<phpdelete><![CDATA[]]></phpdelete>
+	<notice><![CDATA[]]></notice>
+	<file name="engine/inc/addnews.php">
+		<operation action="after">
+			<searchcode><![CDATA[name="title" id="title" maxlength="250" >]]></searchcode>
+			<replacecode><![CDATA[<button onClick="kinopoisk_search(); return false;" class="btn bg-info-800 btn-sm btn-raised legitRipple position-left">Искать на КиноПоиск</button>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[<span id="related_news"></span>]]></searchcode>
+			<replacecode><![CDATA[<div id="kinopoisk_result" style="width: 100%;"></div>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[echo $categoryfilter;]]></searchcode>
+			<replacecode><![CDATA[require_once ENGINE_DIR . '/dlepremium/kinopoisk_parser/inc/addnews.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/editnews.php">
+		<operation action="after">
+			<searchcode><![CDATA[value="{$row['title']}" maxlength="250">]]></searchcode>
+			<replacecode><![CDATA[<button onClick="kinopoisk_search(); return false;" class="btn bg-info-800 btn-sm btn-raised legitRipple position-left">Искать на КиноПоиск</button>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[<span id="related_news"></span>]]></searchcode>
+			<replacecode><![CDATA[<div id="kinopoisk_result" style="width: 100%;"></div>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[echo $categoryfilter;]]></searchcode>
+			<replacecode><![CDATA[require_once ENGINE_DIR . '/dlepremium/kinopoisk_parser/inc/editnews.php';]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/kinopoisk_parser.php">
+		<operation action="create">
+			<replacecode><![CDATA[<?php
+
+if( !defined('DATALIFEENGINE' ) || !defined('LOGGED_IN')) {
+	die('Hacking attempt!');
+}
+
+if (!$user_group[$member_id['user_group']]['admin_complaint']) {
+	msg('error', $lang['index_denied'], $lang['index_denied']);
+}
+
+include ENGINE_DIR . '/dlepremium/kinopoisk_parser/admin/index.php';
+
+?>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/ajax/kinopoisk_parser.php">
+		<operation action="create">
+			<replacecode><![CDATA[<?php
+
+if( !defined('DATALIFEENGINE' ) ) {
+	die('Hacking attempt!');
+}
+
+if (!$user_group[$member_id['user_group']]['admin_complaint']) {
+	msg('error', $lang['index_denied'], $lang['index_denied']);
+}
+
+include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/parser.php';
+
+?>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/ajax/kinopoisk_save.php">
+		<operation action="create">
+			<replacecode><![CDATA[<?php
+
+if( !defined('DATALIFEENGINE' ) ) {
+	die('Hacking attempt!');
+}
+
+if (!$user_group[$member_id['user_group']]['admin_complaint']) {
+	msg('error', $lang['index_denied'], $lang['index_denied']);
+}
+
+include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/save.php';
+
+?>]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/inc/xfields.php">
+		<operation action="replace">
+			<searchcode><![CDATA[} elseif ( $postedxfields[$value[0]] != "" ) {
+
+				if (isset($add_module) AND $add_module == "yes") {
+
+					if( $config['allow_site_wysiwyg'] OR $allow_br != '1' ) {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($parse->process($postedxfields[$value[0]]));
+					
+					} else {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($parse->process($postedxfields[$value[0]]), false);
+					
+					}
+
+				} else {
+
+					if( $config['allow_admin_wysiwyg'] OR $allow_br != '1' ) {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($parse->process($postedxfields[$value[0]]));
+					
+					} else {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($parse->process($postedxfields[$value[0]]), false);
+					
+					}
+
+				}
+
+			}]]></searchcode>
+			<replacecode><![CDATA[} elseif ( $postedxfields[$value[0]] != "" ) {
+
+				if (isset($add_module) AND $add_module == "yes") {
+
+					if( $config['allow_site_wysiwyg'] OR $allow_br != '1' ) {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($postedxfields[$value[0]]);
+					
+					} else {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($postedxfields[$value[0]], false);
+					
+					}
+
+				} else {
+
+					if( $config['allow_admin_wysiwyg'] OR $allow_br != '1' ) {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($postedxfields[$value[0]]);
+					
+					} else {
+						
+						$newpostedxfields[$value[0]] = $parse->BB_Parse($postedxfields[$value[0]], false);
+					
+					}
+
+				}
+
+			}]]></replacecode>
+			<enabled>1</enabled>
+		</operation>
+	</file>
+</dleplugin>
