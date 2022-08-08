@@ -1,5 +1,13 @@
 <?php
 
+/*
+=====================================================
+ Copyright (c) 2022 DLEPremium
+=====================================================
+ This code is protected by copyright
+=====================================================
+*/
+
 dle_session();
 
 require_once (DLEPlugins::Check(ENGINE_DIR . '/modules/sitelogin.php'));
