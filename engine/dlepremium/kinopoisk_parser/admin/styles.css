@@ -1,0 +1,52 @@
+.chosen-container-single .chosen-single:before{
+	background: transparent!important;
+}
+.chosen-container .chosen-results li.result-selected {
+	color: #fff;
+	background: #2c82c9;
+}
+.chosen-container-single .chosen-single {
+    text-transform: none!important;
+}
+.chosen-container-active.chosen-with-drop .chosen-single {
+    box-shadow: none;
+}
+.rcol-2col {
+    float: left;
+    width: 100%;
+    margin: 0 20px 0 0;
+    position: relative;
+    margin-top: -30px;
+}
+.rcol-2col-header {
+    background: #e1e1e1;
+    font: 400 14px/1.5 'Trebuchet MS';
+    color: #7d7d7f;
+    height: 40px !important;
+    padding: 10px 20px;
+    z-index: 5;
+    position: relative;
+    cursor: pointer;
+}
+.rcol-2col-header span {
+    float: left;
+}
+.show-hide {
+    float: right;
+}
+.rcol-2col-body {
+    font-size: 13px;
+    background: #fff;
+    display: none;
+}
+.rcol-2col-body tr:hover {
+    background: #f1f1f1;
+    cursor: pointer;
+}
+.rcol-2col-body td {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+}
+.rcol-2col-body-tr-even {
+    background: #f6f6f6;
+}
