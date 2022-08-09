@@ -1,13 +1,5 @@
 <?php
 
-/*
-=====================================================
- Copyright (c) 2022 DLEPremium
-=====================================================
- This code is protected by copyright
-=====================================================
-*/
-
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $title = isset($_GET['title']) ? $_GET['title'] : null;
 $kp_id = isset($_GET['kp_id']) ? $_GET['kp_id'] : null;
@@ -249,6 +241,7 @@ elseif ( $action == "kinopoisk_get" ) {
 	$tags_array = array();
 	if ( $array_data['year'] ) $tags_array[] = $array_data['year'];
 	if ( $array_data['type_ru'] ) $tags_array[] = $array_data['type_ru'];
+	if ( $array_data['status'] ) $tags_array[] = $array_data['status'];
 	if ( $array_data['countries'] ) $tags_array = array_unique(array_merge($tags_array,explode(', ', $array_data['countries'])));
 	if ( $array_data['genres'] ) $tags_array = array_unique(array_merge($tags_array,explode(', ', $array_data['genres'])));
 	if ( $array_data['collections'] ) $tags_array = array_unique(array_merge($tags_array,explode(', ', $array_data['collections'])));
