@@ -121,7 +121,7 @@ elseif ($parse_action == 'parse') {
     
     //print_r($kp_api);
 	
-	$kp_api_fields = ['russian', 'original', 'english', 'poster', 'cover', 'logo', 'reviews_count', 'rating_good_review', 'rating_good_review_vote_count', 'rating_kinopoisk', 'votes_kinopoisk', 'rating_imdb', 'votes_imdb', 'rating_film_critics', 'rating_film_critics_vote_count', 'rating_await', 'rating_await_count', 'rating_rf_critics', 'rating_rf_critics_vote_count', 'kinopoisk_url', 'year', 'duration', 'slogan', 'plot', 'short_plot', 'editor_annotation', 'production_status', 'type_en', 'type_ru', 'rating_mpaa', 'rating_age_limits', 'countries', 'genres', 'start_year', 'end_year', 'season', 'episode', 'facts', 'errors', 'world_premier', 'usa_premier', 'russia_premier', 'budget', 'marketing', 'fees_usa', 'fees_world', 'awards', 'youtube_trailer', 'kinopoisk_trailer', 'kinopoisk_teaser', 'directors', 'actors', 'producers', 'screenwriters', 'operators', 'composers', 'design', 'editors'];
+	$kp_api_fields = ['russian', 'original', 'english', 'poster', 'cover', 'logo', 'reviews_count', 'rating_good_review', 'rating_good_review_vote_count', 'rating_kinopoisk', 'votes_kinopoisk', 'rating_imdb', 'votes_imdb', 'rating_film_critics', 'rating_film_critics_vote_count', 'rating_await', 'rating_await_count', 'rating_rf_critics', 'rating_rf_critics_vote_count', 'kinopoisk_url', 'year', 'duration', 'slogan', 'plot', 'short_plot', 'editor_annotation', 'production_status', 'type_en', 'type_ru', 'rating_mpaa', 'rating_age_limits', 'countries', 'genres', 'start_year', 'end_year', 'season', 'episode', 'facts', 'errors', 'world_premier', 'usa_premier', 'russia_premier', 'budget', 'marketing', 'fees_usa', 'fees_world', 'awards', 'youtube_trailer', 'directors', 'actors', 'producers', 'screenwriters', 'operators', 'composers', 'design', 'editors'];
 	
 	if ( $kp_api['nameRu'] ) $array_data['russian'] = $kp_api['nameRu'];
 	if ( $kp_api['nameOriginal'] ) $array_data['original'] = $kp_api['nameOriginal'];
@@ -215,9 +215,17 @@ elseif ($parse_action == 'parse') {
 	    $kp_api_distributions = api_request('https://kinopoiskapiunofficial.tech/api/v2.2/films/'.$kp_id.'/distributions', $kp_config['settings']['kinopoiskapiunofficial']);
 	    if ( $kp_api_distributions['items'] ) {
 	        foreach ( $kp_api_distributions['items'] as $distributions ) {
-	            if ( $distributions['type'] == 'WORLD_PREMIER' ) $array_data['world_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
-	            elseif ( $distributions['type'] == 'PREMIERE' && $distributions['country'][0]['country'] == 'США' ) $array_data['usa_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
-	            elseif ( $distributions['type'] == 'LOCAL' && $distributions['country'][0]['country'] == 'Россия' ) $array_data['russia_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
+	            if ( $distributions['type'] == 'WORLD_PREMIER' ) {
+	                $world_premier = $distributions['date'];
+	                $array_data['world_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
+	            }
+	            elseif ( $distributions['type'] == 'PREMIERE' && $distributions['country'][0]['country'] == 'США' ) {
+	                $array_data['usa_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
+	            }
+	            elseif ( $distributions['type'] == 'LOCAL' && $distributions['country'][0]['country'] == 'Россия' ) {
+	                $russia_premier = $distributions['date'];
+	                $array_data['russia_premier'] = convert_date($distributions['date'], $kp_config['settings']['date_format']);
+	            }
 	        }
 	    }
 	}
@@ -250,9 +258,11 @@ elseif ($parse_action == 'parse') {
 	    $kp_api_videos = api_request('https://kinopoiskapiunofficial.tech/api/v2.2/films/'.$kp_id.'/videos', $kp_config['settings']['kinopoiskapiunofficial']);
 	    if ( $kp_api_videos['items'] ) {
 	        foreach ( $kp_api_videos['items'] as $videos ) {
-	            if ( $videos['site'] == 'YOUTUBE' ) $array_data['youtube_trailer'] = $videos['url'];
-	            elseif ( $videos['site'] == 'KINOPOISK_WIDGET' && $videos['name'] == 'Трейлер' ) $array_data['kinopoisk_trailer'] = $videos['url'];
-	            elseif ( $videos['site'] == 'KINOPOISK_WIDGET' && $videos['name'] == 'Тизер' ) $array_data['kinopoisk_teaser'] = $videos['url'];
+	            if ( $videos['site'] == 'YOUTUBE' && stripos($videos['name'], 'Трейлер') !== false ) {
+	                if( preg_match( "#youtu.be/(.*)#i", $videos['url'], $match ) ) $array_data['youtube_trailer'] = 'https://www.youtube.com/embed/'.trim($match[1]);
+	                elseif( preg_match( "#youtube.com/v/(.*)#i", $videos['url'], $match ) ) $array_data['youtube_trailer'] = 'https://www.youtube.com/embed/'.trim($match[1]);
+	                elseif( preg_match( "#youtube.com/watch?v=(.*)#i", $videos['url'], $match ) ) $array_data['youtube_trailer'] = 'https://www.youtube.com/embed/'.trim($match[1]);
+	            }
 	        }
 	    }
 	}
@@ -316,5 +326,13 @@ elseif ($parse_action == 'parse') {
     if ( $ratng[2][0] ) $array_data['rating_kinopoisk'] = $ratng[2][0];
     if ( $ratng[3][0] ) $array_data['votes_imdb'] = $ratng[3][0];
     if ( $ratng[4][0] ) $array_data['rating_imdb'] = $ratng[4][0];
+    
+    if ( isset($russia_premier) ) $world_premier = $russia_premier;
+    if ( isset($world_premier) ) {
+		$time_today = date( "Y-m-d", time() );
+        if ( strtotime($world_premier) > strtotime($time_today) ) $array_data['status'] = 'анонсировано';
+        else $array_data['status'] = 'вышло';
+    }
+    else $array_data['status'] = '';
     
 }
