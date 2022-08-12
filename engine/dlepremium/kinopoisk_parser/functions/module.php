@@ -77,67 +77,69 @@ if (!function_exists('xfparamload')) {
 }
 
 if (!function_exists('setPoster')) {
-function setPoster($poster_url, $poster_title, $poster_name = false, $news_id = 0) {
+    function setPoster($poster_url, $poster_title, $image_kind, $poster_name = false, $news_id = 0) {
 	
-	global $config, $db, $member_id, $user_group;
+	    global $config, $kp_config, $db, $member_id, $user_group;
 	
-	$area = 'xfieldsimage';
+	    $area = 'xfieldsimage';
 	
-	if ( $poster_name ) {
-		$xfparam = xfparamload($poster_name);
-	}
-	else $xfparam = [];
+	    if ( $poster_name ) {
+	    	$xfparam = xfparamload($poster_name);
+	    }
+	    else $xfparam = [];
 	
-	$xfname = $xfparam[0];
-	$t_seite = (int)$config['t_seite'];
-	$m_seite = $t_seite;
-	$t_size = $xfparam[13];
-	$m_size = 0;
-	$config['max_up_side'] = $xfparam[9];
-	$config['max_up_size'] = $xfparam[10];
-	$config['min_up_side'] = $xfparam[22];
-	$make_watermark = (bool)$xfparam[11];
-	$make_thumb = (bool)$xfparam[12];
-	$make_medium = false;
+	    $xfname = $xfparam[0];
+	    $t_seite = (int)$config['t_seite'];
+	    $m_seite = $t_seite;
+	    $t_size = $xfparam[13];
+	    $m_size = 0;
+	    if (isset($xfparam[9])) $config['max_up_side'] = $xfparam[9];
+	    elseif ( $image_kind == 'poster' ) $config['max_up_side'] = $kp_config['images']['poster_max_up_side'];
+	    else $config['max_up_side'] = $kp_config['images']['screens_max_up_side'];
+	    $config['max_up_size'] = 2048;
+	    $config['min_up_side'] = 0;
+	    $make_watermark = (bool)$xfparam[11];
+	    $make_thumb = (bool)$xfparam[12];
+	    $make_medium = false;
 
-	$t_size = explode("x", $t_size);
-	if (count($t_size) == 2) {
-		$t_size = (int)$t_size[0] . "x" . (int)$t_size[1];
-	} else $t_size = (int)$t_size[0];
+	    $t_size = explode("x", $t_size);
+	    if (count($t_size) == 2) {
+	    	$t_size = (int)$t_size[0] . "x" . (int)$t_size[1];
+	    } else $t_size = (int)$t_size[0];
 
-	$m_size = explode("x", $m_size);
-	if (count($m_size) == 2) {
-		$m_size = (int)$m_size[0] . "x" . (int)$m_size[1];
-	} else $m_size = (int)$m_size[0];
+	    $m_size = explode("x", $m_size);
+	    if (count($m_size) == 2) {
+	    	$m_size = (int)$m_size[0] . "x" . (int)$m_size[1];
+	    } else $m_size = (int)$m_size[0];
 
-    $author = $db->safesql($member_id['name']);
+        $author = $db->safesql($member_id['name']);
             
-    $poster_data = file_get_contents($poster_url);
+        $poster_data = file_get_contents($poster_url);
             
-    $poster_title = totranslit(stripslashes( $poster_title ), true, false) . '.jpg';
+        $poster_title = totranslit(stripslashes( $poster_title ), true, false) . '.jpg';
             
-    $new_poster = ROOT_DIR . '/uploads/files/' . $poster_title;
+        $new_poster = ROOT_DIR . '/uploads/files/' . $poster_title;
             
-    file_put_contents($new_poster, $poster_data);
+        file_put_contents($new_poster, $poster_data);
             
-    $exif = exif_read_data($new_poster);
-
-            
-    $_FILES['qqfile'] = [
-        'type' => $exif['MimeType'],
-        'name' => $exif['FileName'],
-        'tmp_name' => $new_poster,
-        'error' => 0,
-        'size' => $exif['FileSize']
-    ];
+        $exif = exif_read_data($new_poster);
 
             
-    $uploader = new FileUploader($area, $news_id, $author, $t_size, $t_seite, $make_thumb, $make_watermark, $m_size, $m_seite, $make_medium);
-    $result = json_decode($uploader->FileUpload(), true);
+        $_FILES['qqfile'] = [
+            'type' => $exif['MimeType'],
+            'name' => $exif['FileName'],
+            'tmp_name' => $new_poster,
+            'error' => 0,
+            'size' => $exif['FileSize']
+        ];
 
-    @unlink($new_poster);
-    return $result;
-}
+            
+        $uploader = new FileUploader($area, $news_id, $author, $t_size, $t_seite, $make_thumb, $make_watermark, $m_size, $m_seite, $make_medium);
+        $result = json_decode($uploader->FileUpload(), true);
+
+        @unlink($new_poster);
+        return $result;
+    }
 }
 
 if (!function_exists('totranslit_it')) {
