@@ -1,5 +1,13 @@
 <?php
 
+/*
+=====================================================
+ Copyright (c) 2022 DLEPremium
+=====================================================
+ This code is protected by copyright
+=====================================================
+*/
+
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $title = isset($_GET['title']) ? $_GET['title'] : null;
 $kp_id = isset($_GET['kp_id']) ? $_GET['kp_id'] : null;
@@ -105,7 +113,7 @@ elseif ( $action == "kinopoisk_get" ) {
         $poster_parsed = true;
         if ( $array_data['russian'] ) $poster_file = totranslit_it($array_data['russian'], true, false);
         else $poster_file = totranslit_it($array_data['original'], true, false);
-        $poster = setPoster($array_data['poster'], $poster_file, $kp_config['images']['xf_poster'], $id_news);
+        $poster = setPoster($array_data['poster'], $poster_file, 'poster', $kp_config['images']['xf_poster'], $id_news);
         $array_data['poster'] = $poster['link'];
         $xf_poster = $poster['xfvalue'];
 	    $poster_code = $poster['returnbox'];
@@ -117,15 +125,15 @@ elseif ( $action == "kinopoisk_get" ) {
 	
 	if ( $need_screens === true ) {
 	    
-	    $screens_list = api_request('https://kinopoiskapiunofficial.tech/api/v2.1/films/'.$kp_id.'/frames', $kp_config['settings']['kinopoiskapiunofficial'] );
-	    if ( $screens_list['frames'] ) {
+	    $screens_list = api_request('https://kinopoiskapiunofficial.tech/api/v2.2/films/'.$kp_id.'/images?type=STILL&page=1', $kp_config['settings']['kinopoiskapiunofficial'] );
+	    if ( $screens_list['items'] ) {
 	        
 	        if ( $array_data['russian'] ) $screen_named = totranslit_it($array_data['russian'], true, false);
             else $screen_named = totranslit_it($array_data['original'], true, false);
 	        
-	        if ( $screens_list['frames'][0]['image'] AND 1 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][0]['imageUrl'] AND 1 <= $kp_config['images']['screens_count'] ) {
                 $screen_1_file = $screen_named.'_kadr_1';
-                $screen_1 = setPoster($screens_list['frames'][0]['image'], $screen_1_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_1 = setPoster($screens_list['items'][0]['imageUrl'], $screen_1_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_1'] = $screen_1['link'];
                 $xf_screen_1 = $screen_1['xfvalue'];
@@ -133,9 +141,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_1'] = '';
 	        
-	        if ( $screens_list['frames'][1]['image'] AND 2 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][1]['imageUrl'] AND 2 <= $kp_config['images']['screens_count'] ) {
                 $screen_2_file = $screen_named.'_kadr_2';
-                $screen_2 = setPoster($screens_list['frames'][1]['image'], $screen_2_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_2 = setPoster($screens_list['items'][1]['imageUrl'], $screen_2_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_2'] = $screen_2['link'];
                 $xf_screen_2 = ",".$screen_2['xfvalue'];
@@ -143,9 +151,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_2'] = '';
 	        
-	        if ( $screens_list['frames'][2]['image'] AND 3 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][2]['imageUrl'] AND 3 <= $kp_config['images']['screens_count'] ) {
                 $screen_3_file = $screen_named.'_kadr_3';
-                $screen_3 = setPoster($screens_list['frames'][2]['image'], $screen_3_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_3 = setPoster($screens_list['items'][2]['imageUrl'], $screen_3_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_3'] = $screen_3['link'];
                 $xf_screen_3 = ",".$screen_3['xfvalue'];
@@ -153,9 +161,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_3'] = '';
 	        
-	        if ( $screens_list['frames'][3]['image'] AND 4 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][3]['imageUrl'] AND 4 <= $kp_config['images']['screens_count'] ) {
                 $screen_4_file = $screen_named.'_kadr_4';
-                $screen_4 = setPoster($screens_list['frames'][3]['image'], $screen_4_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_4 = setPoster($screens_list['items'][3]['imageUrl'], $screen_4_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_4'] = $screen_4['link'];
                 $xf_screen_4 = ",".$screen_4['xfvalue'];
@@ -163,9 +171,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_4'] = '';
 	        
-	        if ( $screens_list['frames'][4]['image'] AND 5 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][4]['imageUrl'] AND 5 <= $kp_config['images']['screens_count'] ) {
                 $screen_5_file = $screen_named.'_kadr_5';
-                $screen_5 = setPoster($screens_list['frames'][4]['image'], $screen_5_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_5 = setPoster($screens_list['items'][4]['imageUrl'], $screen_5_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_5'] = $screen_5['link'];
                 $xf_screen_5 = ",".$screen_5['xfvalue'];
@@ -173,9 +181,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_5'] = '';
 	        
-	        if ( $screens_list['frames'][5]['image'] AND 6 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][5]['imageUrl'] AND 6 <= $kp_config['images']['screens_count'] ) {
                 $screen_6_file = $screen_named.'_kadr_6';
-                $screen_6 = setPoster($screens_list['frames'][5]['image'], $screen_6_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_6 = setPoster($screens_list['items'][5]['imageUrl'], $screen_6_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_6'] = $screen_6['link'];
                 $xf_screen_6 = ",".$screen_6['xfvalue'];
@@ -183,9 +191,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_6'] = '';
 	        
-	        if ( $screens_list['frames'][6]['image'] AND 7 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][6]['imageUrl'] AND 7 <= $kp_config['images']['screens_count'] ) {
                 $screen_7_file = $screen_named.'_kadr_7';
-                $screen_7 = setPoster($screens_list['frames'][6]['image'], $screen_7_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_7 = setPoster($screens_list['items'][6]['imageUrl'], $screen_7_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_7'] = $screen_7['link'];
                 $xf_screen_7 = ",".$screen_7['xfvalue'];
@@ -193,9 +201,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_7'] = '';
 	        
-	        if ( $screens_list['frames'][7]['image'] AND 8 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][7]['imageUrl'] AND 8 <= $kp_config['images']['screens_count'] ) {
                 $screen_8_file = $screen_named.'_kadr_8';
-                $screen_8 = setPoster($screens_list['frames'][7]['image'], $screen_8_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_8 = setPoster($screens_list['items'][7]['imageUrl'], $screen_8_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_8'] = $screen_8['link'];
                 $xf_screen_8 = ",".$screen_8['xfvalue'];
@@ -203,9 +211,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_8'] = '';
 	        
-	        if ( $screens_list['frames'][8]['image'] AND 9 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][8]['imageUrl'] AND 9 <= $kp_config['images']['screens_count'] ) {
                 $screen_9_file = $screen_named.'_kadr_9';
-                $screen_9 = setPoster($screens_list['frames'][8]['image'], $screen_9_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_9 = setPoster($screens_list['items'][8]['imageUrl'], $screen_9_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_9'] = $screen_9['link'];
                 $xf_screen_9 = ",".$screen_9['xfvalue'];
@@ -213,9 +221,9 @@ elseif ( $action == "kinopoisk_get" ) {
 	        }
 	        else $array_data['screenshot_9'] = '';
 	        
-	        if ( $screens_list['frames'][9]['image'] AND 10 <= $kp_config['images']['screens_count'] ) {
+	        if ( $screens_list['items'][9]['imageUrl'] AND 10 <= $kp_config['images']['screens_count'] ) {
                 $screen_10_file = $screen_named.'_kadr_10';
-                $screen_10 = setPoster($screens_list['frames'][9]['image'], $screen_10_file, $kp_config['images']['xf_screens'], $id_news);
+                $screen_10 = setPoster($screens_list['items'][9]['imageUrl'], $screen_10_file, 'kadr', $kp_config['images']['xf_screens'], $id_news);
                 
                 $array_data['screenshot_10'] = $screen_10['link'];
                 $xf_screen_10 = ",".$screen_10['xfvalue'];
