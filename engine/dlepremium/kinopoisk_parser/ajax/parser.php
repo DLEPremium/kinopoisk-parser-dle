@@ -118,6 +118,34 @@ elseif ( $action == "kinopoisk_get" ) {
         $xf_poster = $poster['xfvalue'];
 	    $poster_code = $poster['returnbox'];
     }
+    
+    if ( $mode != 'editnews' && $array_data['logo'] && $kp_config['images']['logo'] == 1 ) $need_logo = true;
+    elseif ( $mode == 'editnews' && $array_data['logo'] && $kp_config['images']['logo_edit'] == 1 ) $need_logo = true;
+    else $need_logo = false;
+    
+    if ( $need_logo === true ) {
+        $logo_parsed = true;
+        if ( $array_data['russian'] ) $logo_file = totranslit_it($array_data['russian'], true, false);
+        else $logo_file = totranslit_it($array_data['original'], true, false);
+        $logo = setPoster($array_data['logo'], $logo_file.'_logo', 'logo', $kp_config['images']['xf_logo'], $id_news);
+        $array_data['logo'] = $logo['link'];
+        $xf_logo = $logo['xfvalue'];
+	    $logo_code = $logo['returnbox'];
+    }
+    
+    if ( $mode != 'editnews' && $array_data['cover'] && $kp_config['images']['cover'] == 1 ) $need_cover = true;
+    elseif ( $mode == 'editnews' && $array_data['cover'] && $kp_config['images']['cover_edit'] == 1 ) $need_cover = true;
+    else $need_cover = false;
+    
+    if ( $need_cover === true ) {
+        $cover_parsed = true;
+        if ( $array_data['russian'] ) $cover_file = totranslit_it($array_data['russian'], true, false);
+        else $cover_file = totranslit_it($array_data['original'], true, false);
+        $cover = setPoster($array_data['cover'], $cover_file.'_cover', 'cover', $kp_config['images']['xf_cover'], $id_news);
+        $array_data['cover'] = $cover['link'];
+        $xf_cover = $cover['xfvalue'];
+	    $cover_code = $cover['returnbox'];
+    }
 	
 	if ( $mode != 'editnews' && $kp_config['images']['screens'] == 1 ) $need_screens = true;
 	elseif ( $mode == 'editnews' && $kp_config['images']['screens_edit'] == 1 ) $need_screens = true;
@@ -306,6 +334,16 @@ elseif ( $action == "kinopoisk_get" ) {
         $array_data2['xf_poster'] = $poster_code;
         $array_data2['xf_poster_name'] = $kp_config['images']['xf_poster'];
         $array_data2['xf_poster_url'] = $xf_poster;
+    }
+    if ( $logo_code && $kp_config['images']['xf_logo'] ) {
+        $array_data2['xf_logo'] = $logo_code;
+        $array_data2['xf_logo_name'] = $kp_config['images']['xf_logo'];
+        $array_data2['xf_logo_url'] = $xf_logo;
+    }
+    if ( $cover_code && $kp_config['images']['xf_cover'] ) {
+        $array_data2['xf_cover'] = $cover_code;
+        $array_data2['xf_cover_name'] = $kp_config['images']['xf_cover'];
+        $array_data2['xf_cover_url'] = $xf_cover;
     }
     if ( $screens_code && $kp_config['images']['xf_screens'] ) {
         $array_data2['xf_screens'] = $screens_code;
