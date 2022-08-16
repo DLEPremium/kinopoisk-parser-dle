@@ -316,6 +316,14 @@ ol ol {
                 $('#uploadedfile_'+data.xf_poster_name+'').html(value);
                 $('#xf_'+data.xf_poster_name+'').val(data.xf_poster_url);
                 $('#xfupload_'+data.xf_poster_name+' .qq-upload-button, #xfupload_'+data.xf_poster_name+' .qq-upload-button input').attr("disabled","disabled");
+            } else if ( name == 'xf_logo' && value != '' ) {
+                $('#uploadedfile_'+data.xf_logo_name+'').html(value);
+                $('#xf_'+data.xf_logo_name+'').val(data.xf_logo_url);
+                $('#xfupload_'+data.xf_logo_name+' .qq-upload-button, #xfupload_'+data.xf_logo_name+' .qq-upload-button input').attr("disabled","disabled");
+            } else if ( name == 'xf_cover' && value != '' ) {
+                $('#uploadedfile_'+data.xf_cover_name+'').html(value);
+                $('#xf_'+data.xf_cover_name+'').val(data.xf_cover_url);
+                $('#xfupload_'+data.xf_cover_name+' .qq-upload-button, #xfupload_'+data.xf_cover_name+' .qq-upload-button input').attr("disabled","disabled");
             } else if ( name == 'xf_screens' && value != '' ) {
                 $('#uploadedfile_'+data.xf_screens_name+'').html(value);
                 $('#xf_'+data.xf_screens_name+'').val(data.xf_screens_url);
