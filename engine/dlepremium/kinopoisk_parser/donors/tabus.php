@@ -18,6 +18,11 @@ if ($parse_action == 'parse' && $kp_config['settings']['tabus'] ) {
     
     if ( !$array_data['poster'] && $tabus['poster'] ) $array_data['poster'] = $tabus['poster'];
     if ( $tabus['collection'] ) {
+        foreach ( $tabus['collection'] as $tnum => $tcollect ) {
+            if ( $tabus['collection'][$tnum] == 'Про мафию, банды' ) $tabus['collection'][$tnum] = 'Про мафию и банды';
+            elseif ( $tabus['collection'][$tnum] == 'Про ограбления, аферы и мошенников' ) $tabus['collection'][$tnum] = 'Про ограбления и мошенников';
+            else continue;
+        }
         $collection = implode(', ', $tabus['collection'] );
         $array_data['collections'] = str_replace('\"', '', $collection);
     }
