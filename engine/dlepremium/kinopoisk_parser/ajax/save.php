@@ -42,7 +42,7 @@ if ($action == 'options') {
 				    $value = implode(',', $value);
 				}
 				else {
-					$value = strip_tags(stripslashes($value), '<li><br>');
+					$value = strip_tags(stripslashes($value), '<li><br><p>');
 				}
 				$new_array[$index][$key] = $value;
 			}
