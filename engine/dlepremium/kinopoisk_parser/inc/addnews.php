@@ -21,8 +21,8 @@ elseif( $config['allow_admin_wysiwyg'] == 1 ) {
 	$full_st = "$('#full_story').froalaEditor('html.set', ";
 }
 elseif( $config['allow_admin_wysiwyg'] == 2 ) {
-	$short_st = "tinymce.get(short_story).setContent(";
-	$full_st = "tinymce.get(full_story).setContent(";
+	$short_st = "tinymce.get('short_story').setContent(";
+	$full_st = "tinymce.get('full_story').setContent(";
 }
 
 include_once ENGINE_DIR . '/dlepremium/kinopoisk_parser/data/config.php';
