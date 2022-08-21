@@ -95,7 +95,7 @@ if (!function_exists('setPoster')) {
 	    $m_size = 0;
 	    if (isset($xfparam[9])) $config['max_up_side'] = $xfparam[9];
 	    elseif ( $image_kind == 'poster' ) $config['max_up_side'] = $kp_config['images']['poster_max_up_side'];
-	    elseif ( $image_kind == 'screens' ) $config['max_up_side'] = $kp_config['images']['screens_max_up_side'];
+	    elseif ( $image_kind == 'kadr' ) $config['max_up_side'] = $kp_config['images']['screens_max_up_side'];
 	    elseif ( $image_kind == 'logo' ) $config['max_up_side'] = $kp_config['images']['logo_max_up_side'];
 	    elseif ( $image_kind == 'cover' ) $config['max_up_side'] = $kp_config['images']['cover_max_up_side'];
 	    $config['max_up_size'] = 2048;
