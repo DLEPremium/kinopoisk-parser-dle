@@ -1,5 +1,5 @@
 # kinopoisk-parser-dle
-Бесплатный парсер КиноПоиска для CMS DataLife Engine (DLE). Парсинг осуществляется с помощью сервиса https://kinopoiskapiunofficial.tech/
+Бесплатный парсер КиноПоиска для CMS DataLife Engine (DLE). Парсинг осуществляется с помощью сервиса https://kinopoiskapiunofficial.tech/. Поддерживаемые версии DLE - 15.x и выше
 
 # Установка:
 1. Установить плагин parser-kinopoisk.xml в системе управления плагинами.
