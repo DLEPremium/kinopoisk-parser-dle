@@ -11,6 +11,7 @@
 if (!function_exists('api_request')) {
     function api_request($url, $x_api_key) {
         
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -120,31 +121,47 @@ if (!function_exists('setPoster')) {
 	    } else $m_size = (int)$m_size[0];
 
         $author = $db->safesql($member_id['name']);
+        
+        $temp_dir = ROOT_DIR . "/uploads/posts/" . date( "Y-m" ) .'/';
+        
+        if( !is_dir( $temp_dir ) ) {
+            @mkdir( $temp_dir, 0777 );
+            @chmod( $temp_dir, 0777 );
+        }
+        else @chmod( $temp_dir, 0777 );
+        
+        if( !is_dir( $temp_dir.'thumbs/' ) ) {
+            @mkdir( $temp_dir.'thumbs/', 0777 );
+            @chmod( $temp_dir.'thumbs/', 0777 );
+        }
+        else @chmod( $temp_dir.'thumbs/', 0777 );
+        
+        if( !is_dir( $temp_dir.'medium/' ) ) {
+            @mkdir( $temp_dir.'medium/', 0777 );
+            @chmod( $temp_dir.'medium/', 0777 );
+        }
+        else @chmod( $temp_dir.'medium/', 0777 );
             
-        $poster_data = file_get_contents($poster_url);
-            
-        $poster_title = totranslit(stripslashes( $poster_title ), true, false) . '.jpg';
+        $poster_title = totranslit(stripslashes( $poster_title ), true, false);
             
         $new_poster = ROOT_DIR . '/uploads/files/' . $poster_title;
             
-        file_put_contents($new_poster, $poster_data);
+        $image = request_file($poster_url, $new_poster);
             
-        $exif = exif_read_data($new_poster);
+        $exif = exif_read_data($image);
 
-            
         $_FILES['qqfile'] = [
             'type' => $exif['MimeType'],
             'name' => $exif['FileName'],
-            'tmp_name' => $new_poster,
+            'tmp_name' => $image,
             'error' => 0,
             'size' => $exif['FileSize']
         ];
-
             
         $uploader = new FileUploader($area, $news_id, $author, $t_size, $t_seite, $make_thumb, $make_watermark, $m_size, $m_seite, $make_medium);
         $result = json_decode($uploader->FileUpload(), true);
 
-        @unlink($new_poster);
+        @unlink($image);
         return $result;
     }
 }
@@ -276,4 +293,57 @@ function unique_multidim_array($array, $key) {
         $i++;
     }
     return $temp_array;
+}
+
+if (!function_exists('request_file')) {
+    function request_file($url, $file = false){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60 );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60 );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        $headers = array(
+            'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.2924.87 Safari/537.36',
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Connection: keep-alive',
+            'Cache-Control: max-age=0',
+            'Upgrade-Insecure-Requests: 1'
+        );
+        if($file){
+			@chmod( ROOT_DIR . "/uploads/files/", 0777 );
+            $fp = fopen($file, "wb");
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $res = curl_exec($ch);
+        curl_close($ch);
+        if($file) {
+            fclose($fp);
+            @chmod($file, 0777);
+            $info = @getimagesize($file);
+            if(is_array($info)){
+                if( $info[2] == 2 ) {
+                    $ext = 'jpg';
+                } elseif( $info[2] == 3 ) {
+                    $ext =  'png';
+                } elseif( $info[2] == 1 ) {
+                    $ext = 'gif';
+                } elseif($info['mime'] == 'image/webp' or $info['mime'] == 'image/x-webp') {
+                    $ext = 'webp';    
+                } else $ext = 'jpg';
+                $GLOBALS['EXT'] = $ext;
+                rename($file, $file.'.'.$ext);
+                return $file.'.'.$ext;
+            } else {
+                @unlink($file);
+                return false;
+            }
+        }
+        return $res;
+    }
 }
