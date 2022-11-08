@@ -3,7 +3,7 @@
 	<name>Парсер КиноПоиск</name>
 	<description></description>
 	<icon></icon>
-	<version>1.0</version>
+	<version>1.1</version>
 	<dleversion></dleversion>
 	<versioncompare>greater</versioncompare>
 	<upgradeurl></upgradeurl>
@@ -170,6 +170,16 @@ include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/save.php';
 
 			}]]></replacecode>
 			<enabled>1</enabled>
+		</operation>
+	</file>
+	<file name="engine/classes/uploads/upload.class.php">
+		<operation action="replace">
+			<searchcode><![CDATA[if (!$this->tmp_name || !is_uploaded_file($this->tmp_name) ) {
+			die( json_encode(array('error' => 'File not send to server' ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+		}]]></searchcode>
+			<enabled>1</enabled>
+			<dleversion>15.3</dleversion>
+			<versioncompare>==</versioncompare>
 		</operation>
 	</file>
 </dleplugin>
