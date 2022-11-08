@@ -358,7 +358,10 @@ ol ol {
 			});
 
             $('.categoryselect').trigger('chosen:updated');
+            $('#category_custom_sort').val(data.parse_cat_list.split(',').join('::'));
 		}
+		
+		
 
         return;
 
