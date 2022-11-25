@@ -177,6 +177,27 @@ include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/save.php';
 			<searchcode><![CDATA[if (!$this->tmp_name || !is_uploaded_file($this->tmp_name) ) {
 			die( json_encode(array('error' => 'File not send to server' ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		}]]></searchcode>
+			<replacecode><![CDATA[if ((!$this->tmp_name || !is_uploaded_file($this->tmp_name)) && !$this->module ) {
+			die( json_encode(array('error' => 'File not send to server' ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+		}]]></replacecode>
+			<enabled>1</enabled>
+			<dleversion>15.3</dleversion>
+			<versioncompare>==</versioncompare>
+		</operation>
+		<operation action="replace">
+			<searchcode><![CDATA[if ( !$this->name ){
+			die( json_encode(array('error' => 'File not send to server' ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+        }]]></searchcode>
+			<replacecode><![CDATA[if ( !$this->name && !$this->module ){
+			die( json_encode(array('error' => 'File not send to server' ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+        }]]></replacecode>
+			<enabled>1</enabled>
+			<dleversion>15.3</dleversion>
+			<versioncompare>==</versioncompare>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[$this->size = $_FILES['qqfile']['size'];]]></searchcode>
+			<replacecode><![CDATA[$this->module = isset($_REQUEST['module']) ? $_REQUEST['module'] : false;]]></replacecode>
 			<enabled>1</enabled>
 			<dleversion>15.3</dleversion>
 			<versioncompare>==</versioncompare>
