@@ -98,6 +98,8 @@ if ( $action == "parser_search" ) {
 	}
 }
 elseif ( $action == "kinopoisk_get" ) {
+	
+	$_REQUEST['module'] = 'parser_kinopoisk';
     
     include_once(DLEPlugins::Check(ENGINE_DIR . '/classes/uploads/upload.class.php'));
 	
