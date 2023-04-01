@@ -3,7 +3,7 @@
 	<name>Парсер КиноПоиск</name>
 	<description></description>
 	<icon></icon>
-	<version>1.1</version>
+	<version>1.2</version>
 	<dleversion></dleversion>
 	<versioncompare>greater</versioncompare>
 	<upgradeurl></upgradeurl>
@@ -182,7 +182,7 @@ include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/save.php';
 		}]]></replacecode>
 			<enabled>1</enabled>
 			<dleversion>15.3</dleversion>
-			<versioncompare>==</versioncompare>
+			<versioncompare>greater</versioncompare>
 		</operation>
 		<operation action="replace">
 			<searchcode><![CDATA[if ( !$this->name ){
@@ -193,14 +193,14 @@ include ENGINE_DIR . '/dlepremium/kinopoisk_parser/ajax/save.php';
         }]]></replacecode>
 			<enabled>1</enabled>
 			<dleversion>15.3</dleversion>
-			<versioncompare>==</versioncompare>
+			<versioncompare>greater</versioncompare>
 		</operation>
 		<operation action="after">
 			<searchcode><![CDATA[$this->size = $_FILES['qqfile']['size'];]]></searchcode>
 			<replacecode><![CDATA[$this->module = isset($_REQUEST['module']) ? $_REQUEST['module'] : false;]]></replacecode>
 			<enabled>1</enabled>
 			<dleversion>15.3</dleversion>
-			<versioncompare>==</versioncompare>
+			<versioncompare>greater</versioncompare>
 		</operation>
 	</file>
 </dleplugin>
